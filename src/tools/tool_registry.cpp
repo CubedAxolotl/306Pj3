@@ -4,6 +4,7 @@
 // Every function below is a stub so the starter compiles. Replace each body.
 
 #include "tools/tool_registry.h"
+#include <utility>
 
 ToolRegistry::ToolRegistry() = default;    // TODO: create your initial buckets
 ToolRegistry::~ToolRegistry() = default;   // unique_ptrs in your buckets free the tools
@@ -38,4 +39,13 @@ double ToolRegistry::load_factor() const noexcept {
 
 std::size_t ToolRegistry::max_probe_length() const {
     return 0;   // TODO
+}
+
+std::size_t ToolRegistry::index_for(std::string_view) const noexcept {
+    // TODO
+    return 0;
+}
+
+void ToolRegistry::rehash(std::size_t) {
+    // TODO
 }

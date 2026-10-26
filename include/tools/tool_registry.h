@@ -70,4 +70,20 @@ private:
     // Your buckets, your element count, and any private helpers you want
     // (for example a rehash function). Store std::unique_ptr<Tool> in the
     // buckets so that pointers handed out by find() survive a resize.
+     std::vector<std::vector<std::unique_ptr<Tool>>> buckets_;
+ 
+    // TODO: number of tools currently stored
+    std::size_t count_ = 0;
+ 
+    // TODO: pick the starting bucket count (1-64; a power of two lets you use hash & (n - 1) instead of %`)
+    static constexpr std::size_t kInitialBuckets = 8;
+ 
+    // TODO: pick your max load factor, .75–1 for chaining; must be < 1 for open addressing.
+    static constexpr double kMaxLoadFactor = 1.0;
+ 
+    // TODO: turn a full-width hash into a bucket index for the CURRENT bucket count.
+    std::size_t index_for(std::string_view key) const noexcept;
+ 
+    // TODO: allocate new_bucket_count buckets and re-insert every existing tool
+    void rehash(std::size_t new_bucket_count);
 };
