@@ -1,0 +1,1 @@
+/usr/bin/c++ -fsanitize=address,undefined CMakeFiles/test_p3.dir/tests/p3/test_p3.cpp.o -o test_p3  libharness_core.a 
