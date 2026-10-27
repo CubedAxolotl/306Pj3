@@ -6,7 +6,7 @@
 #include "tools/tool_registry.h"
 #include <utility>
 
-ToolRegistry::ToolRegistry() = default;    // TODO: create your initial buckets
+ToolRegistry::ToolRegistry() : buckets_(kInitialBuckets){}   // TODO: create your initial buckets
 ToolRegistry::~ToolRegistry() = default;   // unique_ptrs in your buckets free the tools
 
 std::size_t ToolRegistry::hash(std::string_view key) noexcept {
@@ -39,11 +39,18 @@ bool ToolRegistry::add(std::unique_ptr<Tool> tool) {
     buckets_[b].push_back(std::move(tool));//hand over ownership of the tool
     ++count_;
 
-    return true;   // TODO
+    return true;   
 }
 
-Tool* ToolRegistry::find(std::string_view /*name*/) const {
-    return nullptr;   // TODO
+Tool* ToolRegistry::find(std::string_view name) const {
+    
+    const std::size_t b = index_for(name);
+    for (const std::unique_ptr<Tool>& entry : buckets_[b]) {
+        if (entry->name() == name){
+            return entry.get();
+        }
+    }
+    return nullptr;   
 }
 
 std::size_t ToolRegistry::size() const noexcept {
@@ -51,7 +58,7 @@ std::size_t ToolRegistry::size() const noexcept {
 }
 
 void ToolRegistry::for_each(const std::function<void(const Tool&)>& fn) const {
-    // TODO
+
     for (const std::vector<std::unique_ptr<Tool>>& chain : buckets_){
         for (const std::unique_ptr<Tool>& entry : chain) {
           fn(*entry);  
@@ -75,11 +82,11 @@ std::size_t ToolRegistry::max_probe_length() const {
             longest = chain.size();
         }
     } 
-    return longest;   // TODO
+    return longest;  
 }
 
 std::size_t ToolRegistry::index_for(std::string_view key) const noexcept {
-    // TODO
+
     return hash(key) & (buckets_.size()-1);
 }
 
@@ -97,5 +104,6 @@ void ToolRegistry::rehash(std::size_t new_bucket_count) {
         }
 
     }
+     buckets_.swap(new_buckets);
 }
 
