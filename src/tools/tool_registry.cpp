@@ -36,7 +36,10 @@ bool ToolRegistry::add(std::unique_ptr<Tool> tool) {
     }
 
     const std::size_t b = index_for(name);
-    return false;   // TODO
+    buckets_[b].push_back(std::move(tool));//hand over ownership of the tool
+    ++count_;
+
+    return true;   // TODO
 }
 
 Tool* ToolRegistry::find(std::string_view /*name*/) const {
