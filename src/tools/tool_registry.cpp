@@ -50,20 +50,32 @@ std::size_t ToolRegistry::size() const noexcept {
     return count_;
 }
 
-void ToolRegistry::for_each(const std::function<void(const Tool&)>& /*fn*/) const {
+void ToolRegistry::for_each(const std::function<void(const Tool&)>& fn) const {
     // TODO
+    for (const std::vector<std::unique_ptr<Tool>>& chain : buckets_){
+        for (const std::unique_ptr<Tool>& entry : chain) {
+          fn(*entry);  
+        }
+    }
 }
 
 std::size_t ToolRegistry::bucket_count() const noexcept {
-    return 0;   // TODO
+    return buckets_.size();   // TOO
 }
 
 double ToolRegistry::load_factor() const noexcept {
-    return 0.0;   // TODO
+    return static_cast<double>(count_) / static_cast<double>(buckets_.size());
 }
 
 std::size_t ToolRegistry::max_probe_length() const {
-    return 0;   // TODO
+    std::size_t longest = 0;
+
+    for (const std::vector<std::unique_ptr<Tool>>& chain : buckets_) {
+        if (chain.size()>longest){
+            longest = chain.size();
+        }
+    } 
+    return longest;   // TODO
 }
 
 std::size_t ToolRegistry::index_for(std::string_view key) const noexcept {
@@ -86,3 +98,4 @@ void ToolRegistry::rehash(std::size_t new_bucket_count) {
 
     }
 }
+
